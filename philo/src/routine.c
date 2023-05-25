@@ -6,7 +6,7 @@
 /*   By: etattevi <etattevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:24:21 by hunam             #+#    #+#             */
-/*   Updated: 2023/05/25 17:38:27 by etattevi         ###   ########.fr       */
+/*   Updated: 2023/05/25 17:48:44 by etattevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,44 +35,6 @@ void	philo_routine(t_seat *seat)
 	}
 }
 
-bool	eat(t_seat *seat)
-{
-	if (!is_done_eating(seat))
-	{
-		if (!grab_forks(seat))
-			return (false);
-		if (!log_msg(seat, eating))
-			return (false);
-		if (gettimeofday(&seat->last_meal, NULL))
-			return (false);
-		if (pthread_mutex_lock(&seat->meals_mutex))
-			return (false);
-		seat->meals_eaten++;
-		if (pthread_mutex_unlock(&seat->meals_mutex))
-			return (false);
-		if (usleep(seat->philos->time_to_eat * 1000))
-			return (false);
-		if (pthread_mutex_unlock(&right_seat(seat)->fork))
-			return (false);
-		if (pthread_mutex_unlock(&seat->fork))
-			return (false);
-	}
-	return (true);
-}
-
-bool	grab_forks(t_seat *seat)
-{
-	if (pthread_mutex_lock(&seat->fork))
-		return (false);
-	if (!log_msg(seat, take_a_fork))
-		return (false);
-	if (pthread_mutex_lock(&right_seat(seat)->fork))
-		return (false);
-	if (!log_msg(seat, take_a_fork))
-		return (false);
-	return (true);
-}
-
 bool	only_one_philo(t_seat *seat)
 {
 	if (seat->philos->philos_nb != 1)
@@ -86,28 +48,4 @@ bool	only_one_philo(t_seat *seat)
 	if (pthread_mutex_unlock(&seat->fork))
 		return (seat->errored = true, true);
 	return (true);
-}
-
-bool	has_anyone_died(t_seat *seat)
-{
-	bool	death;
-
-	if (pthread_mutex_lock(&seat->philos->died_mutex))
-		return (seat->errored = true, true);
-	death = seat->philos->has_anyone_died;
-	if (pthread_mutex_unlock(&seat->philos->died_mutex))
-		return (seat->errored = true, true);
-	return (death);
-}
-
-void	set_has_anyone_died(t_seat *seat)
-{
-	if (pthread_mutex_lock(&seat->philos->died_mutex))
-	{
-		seat->errored = true;
-		return ;
-	}
-	seat->philos->has_anyone_died = true;
-	if (pthread_mutex_unlock(&seat->philos->died_mutex))
-		seat->errored = true;
 }

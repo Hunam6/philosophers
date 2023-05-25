@@ -6,7 +6,7 @@
 /*   By: etattevi <etattevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:39:13 by hunam             #+#    #+#             */
-/*   Updated: 2023/05/25 17:36:15 by etattevi         ###   ########.fr       */
+/*   Updated: 2023/05/25 17:50:05 by etattevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ long	time_since_ts(struct timeval *a)
 			+ (current_time.tv_usec - a->tv_usec)) / 1000);
 }
 
-bool	is_philo_dead(t_seat *seat)
+t_seat	*right_seat(t_seat *seat)
 {
-	const long	ts = time_since_ts(&seat->last_meal);
-
-	return (ts > seat->philos->time_to_die || ts == -1);
+	if (seat->id == seat->philos->philos_nb - 1)
+		return (&seat->philos->seats[0]);
+	else
+		return (&seat->philos->seats[seat->id + 1]);
 }
 
 bool	log_msg(t_seat *seat, t_log_msg msg)
@@ -78,12 +79,4 @@ bool	log_msg(t_seat *seat, t_log_msg msg)
 	if (pthread_mutex_unlock(&print_mutex))
 		return (false);
 	return (true);
-}
-
-t_seat	*right_seat(t_seat *seat)
-{
-	if (seat->id == seat->philos->philos_nb - 1)
-		return (&seat->philos->seats[0]);
-	else
-		return (&seat->philos->seats[seat->id + 1]);
 }

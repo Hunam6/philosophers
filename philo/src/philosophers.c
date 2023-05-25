@@ -6,7 +6,7 @@
 /*   By: etattevi <etattevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:24:21 by hunam             #+#    #+#             */
-/*   Updated: 2023/05/25 17:37:55 by etattevi         ###   ########.fr       */
+/*   Updated: 2023/05/25 17:49:02 by etattevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,28 +80,6 @@ bool	is_input_valid(t_philos *philos, int ac, char **av)
 	return (true);
 }
 
-bool	kill_philosophy(t_philos *philos)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philos->philos_nb)
-		if (pthread_join(philos->seats[i].thread, NULL))
-			return (false);
-	i = -1;
-	while (++i < philos->philos_nb)
-	{
-		if (pthread_mutex_destroy(&philos->seats[i].fork))
-			return (false);
-		if (pthread_mutex_destroy(&philos->seats[i].meals_mutex))
-			return (false);
-	}
-	if (pthread_mutex_destroy(&philos->died_mutex))
-		return (false);
-	return (true);
-}
-
-
 bool	check_philos(t_philos *philos)
 {
 	static int	philos_done_eating = 0;
@@ -118,7 +96,7 @@ bool	check_philos(t_philos *philos)
 				return (log_msg(&philos->seats[i], die));
 			if (philos->seats[i].errored)
 				return (false);
-			philos_done_eating += is_philo_done_eating(&philos->seats[i]);
+			philos_done_eating += is_done_eating(&philos->seats[i]);
 			if (philos_done_eating == philos->philos_nb)
 				return (true);
 			if (usleep(5000 / philos->philos_nb))

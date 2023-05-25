@@ -2,10 +2,11 @@ NAME := philo
 FLAGS := -Wall -Wextra -Werror -Ofast
 
 SRCS := $(addprefix src/,\
-	philo.c \
-	philos.c \
-	utils.c \
+	philosophers.c \
+	routine.c \
 	eating.c \
+	dying.c \
+	utils.c \
 )
 
 .PHONY: all bonus clean fclean re

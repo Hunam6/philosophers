@@ -6,7 +6,7 @@
 /*   By: etattevi <etattevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:18:38 by hunam             #+#    #+#             */
-/*   Updated: 2023/05/25 17:42:34 by etattevi         ###   ########.fr       */
+/*   Updated: 2023/05/25 17:56:44 by etattevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,33 +57,31 @@ typedef struct s_philos {
 	t_seat			seats[200];
 }	t_philos;
 
-//philos.c
+//philosophers.c
 bool	init_philos(t_philos *philos, int ac, char **av);
 bool	init_each_philo(t_philos *philos);
 bool	is_input_valid(t_philos *philos, int ac, char **av);
-bool	kill_philosophy(t_philos *philos);
 bool	check_philos(t_philos *philos);
+
+//routine.c
+void	philo_routine(t_seat *seat);
+bool	only_one_philo(t_seat *seat);
+
+//eating.c
+bool	eat(t_seat *seat);
+bool	is_done_eating(t_seat *seat);
+bool	grab_forks(t_seat *seat);
+
+//dying.c
+bool	has_anyone_died(t_seat *seat);
+void	set_has_anyone_died(t_seat *seat);
+bool	is_philo_dead(t_seat *seat);
+bool	kill_philosophy(t_philos *philos);
 
 //utils.c
 int		ft_atoi(const char *str);
-bool	is_philo_dead(t_seat *seat);
-bool	log_msg(t_seat *seat, t_log_msg msg);
-t_seat	*right_seat(t_seat *seat);
 long	time_since_ts(struct timeval *a);
-
-//eating.c
-bool	is_philo_done_eating(t_seat *seat);
-
-//philo.c
-bool	get_forks(t_seat *seat);
-bool	eat(t_seat *seat);
-bool	only_one_philo(t_seat *seat);
-bool	is_done_eating(t_seat *seat);
-bool	has_anyone_died(t_seat *seat);
-void	set_has_anyone_died(t_seat *seat);
-void	philo_routine(t_seat *seat);
-bool	grab_forks(t_seat *seat);
-
-//TODO. make sure every function is prototyped
+t_seat	*right_seat(t_seat *seat);
+bool	log_msg(t_seat *seat, t_log_msg msg);
 
 #endif
