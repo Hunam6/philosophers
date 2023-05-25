@@ -1,0 +1,11 @@
+#VSCode
+.vscode
+
+#MacOS
+*.dSYM/
+.DS_Store
+
+#C
+a.out
+philo/philo
+philo/tester
